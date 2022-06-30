@@ -1,10 +1,11 @@
+import com.hoodee.springframework.beans.PropertyValue;
+import com.hoodee.springframework.beans.PropertyValues;
 import com.hoodee.springframework.beans.factory.config.BeanDefinition;
+import com.hoodee.springframework.beans.factory.config.BeanReference;
 import com.hoodee.springframework.beans.factory.support.DefaultListableBeanFactory;
-import com.hoodee.springframework.beans.factory.support.SimpleInstantiationStrategy;
+import com.hoodee.springframework.test.bean.UserDao;
 import com.hoodee.springframework.test.bean.UserService;
 import org.junit.Test;
-
-import java.lang.reflect.Constructor;
 
 /**
  * @version 1.0
@@ -18,34 +19,20 @@ public class ApiTest {
         // 1.初始化 BeanFactory
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
 
-        // 2.注册bean
-        BeanDefinition beanDefinition = new BeanDefinition(UserService.class);
-        // 可以指定自己想要的实例方式
-        beanFactory.setInstantiationStrategy(new SimpleInstantiationStrategy());
+        // 2. UserDao 注册
+        beanFactory.registerBeanDefinition("userDao", new BeanDefinition(UserDao.class));
+
+        // 3. UserService 设置属性[name、userDao]
+        PropertyValues propertyValues = new PropertyValues();
+        propertyValues.addPropertyValue(new PropertyValue("name", "10001"));
+        propertyValues.addPropertyValue(new PropertyValue("userDao",new BeanReference("userDao")));
+
+        // 4. UserService 注入bean
+        BeanDefinition beanDefinition = new BeanDefinition(UserService.class, propertyValues);
         beanFactory.registerBeanDefinition("userService", beanDefinition);
 
-        //3.获取bean
-        UserService userService = (UserService) beanFactory.getBean("userService", "小傅哥");
-
+        // 5. UserService 获取bean
+        UserService userService = (UserService) beanFactory.getBean("userService");
         userService.queryUserInfo();
-    }
-
-    @Test
-    public void test_constructor() throws Exception {
-        Class<UserService> userServiceClass = UserService.class;
-        Constructor<UserService> declaredConstructor = userServiceClass.getDeclaredConstructor(String.class);
-        UserService userService = declaredConstructor.newInstance("小傅哥");
-        System.out.println(userService);
-    }
-
-    @Test
-    public void test_parameterTypes() throws Exception {
-        Class<UserService> beanClass = UserService.class;
-        Constructor<?>[] declaredConstructors = beanClass.getDeclaredConstructors();
-        Constructor<?> constructor = declaredConstructors[0];
-        Constructor<UserService> declaredConstructor = beanClass.getDeclaredConstructor(constructor.getParameterTypes());
-        UserService userService = declaredConstructor.newInstance("小傅哥");
-        System.out.println(userService);
-
     }
 }

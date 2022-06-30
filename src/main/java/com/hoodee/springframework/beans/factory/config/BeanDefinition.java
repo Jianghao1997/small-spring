@@ -1,5 +1,9 @@
 package com.hoodee.springframework.beans.factory.config;
 
+import com.hoodee.springframework.beans.PropertyValues;
+
+import java.util.Optional;
+
 /**
  * 用于定义 Bean 实例化信息，现在的实现是以一个 Object 存放对象
  * @version 1.0
@@ -8,18 +12,33 @@ package com.hoodee.springframework.beans.factory.config;
  */
 public class BeanDefinition {
 
-    // 由object 改为 class 可以存放Bean的实例化
-    private Class  bean;
+    private Class beanClass;
 
-    public BeanDefinition(Class  bean) {
-        this.bean = bean;
+    private PropertyValues propertyValues;
+
+    public BeanDefinition(Class beanClass) {
+        this.beanClass = beanClass;
+        this.propertyValues = new PropertyValues();
+    }
+
+    public BeanDefinition(Class beanClass, PropertyValues propertyValues) {
+        this.beanClass = beanClass;
+        this.propertyValues = propertyValues != null ? propertyValues : new PropertyValues();
     }
 
     public Class getBeanClass() {
-        return bean;
+        return beanClass;
     }
 
-    public void setBeanClass(Class  bean) {
-        this.bean = bean;
+    public void setBeanClass(Class beanClass) {
+        this.beanClass = beanClass;
+    }
+
+    public PropertyValues getPropertyValues() {
+        return propertyValues;
+    }
+
+    public void setPropertyValues(PropertyValues propertyValues) {
+        this.propertyValues = propertyValues;
     }
 }

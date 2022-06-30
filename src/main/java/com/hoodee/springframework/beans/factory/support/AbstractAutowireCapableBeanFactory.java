@@ -1,7 +1,11 @@
 package com.hoodee.springframework.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.hoodee.springframework.beans.BeansException;
+import com.hoodee.springframework.beans.PropertyValue;
+import com.hoodee.springframework.beans.PropertyValues;
 import com.hoodee.springframework.beans.factory.config.BeanDefinition;
+import com.hoodee.springframework.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -16,9 +20,11 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
     @Override
     protected Object createBean(String name, BeanDefinition beanDefinition, Object[] args) throws BeansException {
-        Object bean;
+        Object bean = null;
         try {
             bean = createBeanInstance(beanDefinition, name, args);
+            // 给 Bean 填充属性
+            applyPropertyValues(name, bean, beanDefinition);
         } catch (Exception e) {
             throw new BeansException("实例化对象bean失败", e);
         }
@@ -26,7 +32,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         return bean;
     }
 
-    protected Object createBeanInstance(BeanDefinition beanDefinition ,String name, Object[] args) {
+    protected Object createBeanInstance(BeanDefinition beanDefinition, String beanName, Object[] args) {
         Constructor constructorToUse = null;
         Class<?> beanClass = beanDefinition.getBeanClass();
         Constructor<?>[] constructors = beanClass.getDeclaredConstructors();
@@ -37,7 +43,32 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
-        return getInstantiationStrategy().instantiate(beanDefinition, name, constructorToUse, args);
+        Object instantiate = getInstantiationStrategy().instantiate(beanDefinition, beanName, constructorToUse, args);
+        return instantiate;
+    }
+
+    /**
+     * Bean 属性填充
+     */
+    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) {
+        try {
+            PropertyValues propertyValues = beanDefinition.getPropertyValues();
+            for (PropertyValue propertyValue : propertyValues.getPropertyValues()) {
+
+                String name = propertyValue.getName();
+                Object value = propertyValue.getValue();
+
+                if (value instanceof BeanReference) {
+                    // A 依赖 B，获取 B 的实例化
+                    BeanReference beanReference = (BeanReference) value;
+                    value = getBean(beanReference.getBeanName());
+                }
+                // 属性填充
+                BeanUtil.setFieldValue(bean, name, value);
+            }
+        } catch (Exception e) {
+            throw new BeansException("Error setting property values：" + beanName);
+        }
     }
 
     public InstantiationStrategy getInstantiationStrategy() {
@@ -47,4 +78,5 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     public void setInstantiationStrategy(InstantiationStrategy instantiationStrategy) {
         this.instantiationStrategy = instantiationStrategy;
     }
+
 }
