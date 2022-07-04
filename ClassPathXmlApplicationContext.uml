@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.hoodee.springframework.context.support.ClassPathXmlApplicationContext</OriginalElement>
+  <nodes>
+    <node x="48.0" y="160.0">com.hoodee.springframework.context.ApplicationContext</node>
+    <node x="152.0" y="320.0">com.hoodee.springframework.context.support.AbstractApplicationContext</node>
+    <node x="0.0" y="240.0">com.hoodee.springframework.context.ConfigurableApplicationContext</node>
+    <node x="308.0" y="240.0">com.hoodee.springframework.core.io.DefaultResourceLoader</node>
+    <node x="336.0" y="160.0">com.hoodee.springframework.core.io.ResourceLoader</node>
+    <node x="76.0" y="0.0">com.hoodee.springframework.beans.factory.BeanFactory</node>
+    <node x="108.0" y="400.0">com.hoodee.springframework.context.support.AbstractRefreshableApplicationContext</node>
+    <node x="107.0" y="562.0">com.hoodee.springframework.context.support.ClassPathXmlApplicationContext</node>
+    <node x="140.0" y="480.0">com.hoodee.springframework.context.support.AbstractXmlApplicationContext</node>
+    <node x="44.0" y="80.0">com.hoodee.springframework.beans.factory.ListableBeanFactory</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.hoodee.springframework.context.ApplicationContext" target="com.hoodee.springframework.beans.factory.ListableBeanFactory">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.support.AbstractXmlApplicationContext" target="com.hoodee.springframework.context.support.AbstractRefreshableApplicationContext">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.support.ClassPathXmlApplicationContext" target="com.hoodee.springframework.context.support.AbstractXmlApplicationContext">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.beans.factory.ListableBeanFactory" target="com.hoodee.springframework.beans.factory.BeanFactory">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.support.AbstractRefreshableApplicationContext" target="com.hoodee.springframework.context.support.AbstractApplicationContext">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.ConfigurableApplicationContext" target="com.hoodee.springframework.context.ApplicationContext">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.support.AbstractApplicationContext" target="com.hoodee.springframework.core.io.DefaultResourceLoader">
+      <point x="64.0" y="-15.0" />
+      <point x="344.0" y="295.0" />
+      <point x="416.0" y="295.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.core.io.DefaultResourceLoader" target="com.hoodee.springframework.core.io.ResourceLoader">
+      <point x="0.0" y="-15.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.hoodee.springframework.context.support.AbstractApplicationContext" target="com.hoodee.springframework.context.ConfigurableApplicationContext">
+      <point x="-64.0" y="-15.0" />
+      <point x="216.0" y="295.0" />
+      <point x="144.0" y="295.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="262.0" y="295.0" />
+  <SelectedNodes>
+    <node>com.hoodee.springframework.context.support.ClassPathXmlApplicationContext</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
