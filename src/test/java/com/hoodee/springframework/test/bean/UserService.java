@@ -1,11 +1,14 @@
 package com.hoodee.springframework.test.bean;
 
+import com.hoodee.springframework.beans.factory.DisposableBean;
+import com.hoodee.springframework.beans.factory.InitializingBean;
+
 /**
  * @version 1.0
  * @author: jianghao
  * @createTime: 2022年06月29日 11:37
  */
-public class UserService {
+public class UserService implements InitializingBean, DisposableBean {
 
     private String uId;
     private String company;
@@ -53,5 +56,15 @@ public class UserService {
         final StringBuilder sb = new StringBuilder("");
         sb.append("").append(uId);
         return sb.toString();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("执行：UserService.afterPropertiesSet");
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("执行：UserService.destroy");
     }
 }
