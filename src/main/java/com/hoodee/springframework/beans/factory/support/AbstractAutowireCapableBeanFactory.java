@@ -33,18 +33,27 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             applyPropertyValues(name, bean, beanDefinition);
             // 执行Bean 的初始化方法和 BeanPostProcessor 的前置和后置处理方法
             bean = initializeBean(name, bean, beanDefinition);
+
         } catch (Exception e) {
             throw new BeansException("实例化对象bean失败", e);
         }
 
         // 注册实现了 DisposableBean 接口的 Bean 对象
         registerDisposableBeanIfNecessary(name, bean, beanDefinition);
-        addSingleton(name, bean);
+
+        // 判断作用域
+        if (beanDefinition.isSingleton()) {
+            addSingleton(name, bean);
+        }
         
         return bean;
     }
 
     protected void registerDisposableBeanIfNecessary(String name, Object bean, BeanDefinition beanDefinition) {
+
+        // 非 Singleton 类型的 Bean 不执行销毁方法
+        if (!beanDefinition.isSingleton()) return;
+
         if (bean instanceof DisposableBean || StrUtil.isNotEmpty(beanDefinition.getDestroyMethodName())) {
             registerDisposableBean(name, new DisposableBeanAdapter(bean, name, beanDefinition));
         }

@@ -10,6 +10,7 @@ import com.hoodee.springframework.beans.factory.support.AbstractBeanDefinitionRe
 import com.hoodee.springframework.beans.factory.support.BeanDefinitionRegistry;
 import com.hoodee.springframework.core.io.Resource;
 import com.hoodee.springframework.core.io.ResourceLoader;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -86,6 +87,9 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             String initMethod = bean.getAttribute("init-method");
             String destroyMethodName = bean.getAttribute("destroy-method");
 
+            // 解析作用域
+            String beanScope = bean.getAttribute("scope");
+
             // 获取 Class，方便获取类中的名称
             Class<?> clazz = Class.forName(className);
             // 优先级 id > name
@@ -99,6 +103,10 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 
             beanDefinition.setInitMethodName(initMethod);
             beanDefinition.setDestroyMethodName(destroyMethodName);
+
+            if (StringUtils.isNotEmpty(beanScope)) {
+                beanDefinition.setScope(beanScope);
+            }
             // 读取属性并填充
             for (int j = 0; j < bean.getChildNodes().getLength(); j++) {
                 if (!(bean.getChildNodes().item(j) instanceof Element)) continue;

@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userDao" class="com.hoodee.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod" />
+<!--    <bean id="userDao" class="com.hoodee.springframework.test.bean.UserDao" init-method="initDataMethod" destroy-method="destroyDataMethod" />-->
 
-    <bean id="userService" class="com.hoodee.springframework.test.bean.UserService">
+    <bean id="userService" class="com.hoodee.springframework.test.bean.UserService" scope="prototype">
         <property name="uId" value="10001"/>
         <property name="company" value="腾讯"/>
         <property name="location" value="深圳"/>
-        <property name="userDao" ref="userDao"/>
+        <property name="userDao" ref="proxyUserDao"/>
     </bean>
 
     <!--增强配置，有BeanFactoryPostProcessor、BeanPostProcessor，实现类-->
 <!--    <bean class="com.hoodee.springframework.test.common.MyBeanPostProcessor"/>-->
 <!--    <bean class="com.hoodee.springframework.test.common.MyBeanFactoryPostProcessor"/>-->
+
+    <bean id="proxyUserDao" class="com.hoodee.springframework.test.bean.ProxyBeanFactory"/>
+
 </beans>
