@@ -11,6 +11,6 @@
     </bean>
 
     <!--增强配置，有BeanFactoryPostProcessor、BeanPostProcessor，实现类-->
-    <bean class="com.hoodee.springframework.test.common.MyBeanPostProcessor"/>
-    <bean class="com.hoodee.springframework.test.common.MyBeanFactoryPostProcessor"/>
+<!--    <bean class="com.hoodee.springframework.test.common.MyBeanPostProcessor"/>-->
+<!--    <bean class="com.hoodee.springframework.test.common.MyBeanFactoryPostProcessor"/>-->
 </beans>

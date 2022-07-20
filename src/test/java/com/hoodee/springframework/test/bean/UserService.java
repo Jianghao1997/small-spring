@@ -1,19 +1,24 @@
 package com.hoodee.springframework.test.bean;
 
-import com.hoodee.springframework.beans.factory.DisposableBean;
-import com.hoodee.springframework.beans.factory.InitializingBean;
+import com.hoodee.springframework.beans.BeansException;
+import com.hoodee.springframework.beans.factory.*;
+import com.hoodee.springframework.context.ApplicationContext;
+import com.hoodee.springframework.context.ApplicationContextAware;
 
 /**
  * @version 1.0
  * @author: jianghao
  * @createTime: 2022年06月29日 11:37
  */
-public class UserService implements InitializingBean, DisposableBean {
+public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware {
 
     private String uId;
     private String company;
     private String location;
     private UserDao userDao;
+
+    private ApplicationContext applicationContext;
+    private BeanFactory beanFactory;
 
     public String queryUserInfo() {
         return userDao.queryUserName(uId)+", 公司："+company+", 地点"+location;
@@ -51,6 +56,14 @@ public class UserService implements InitializingBean, DisposableBean {
         this.userDao = userDao;
     }
 
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("");
@@ -59,12 +72,22 @@ public class UserService implements InitializingBean, DisposableBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        System.out.println("执行：UserService.afterPropertiesSet");
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 
     @Override
-    public void destroy() throws Exception {
-        System.out.println("执行：UserService.destroy");
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void setBeanName(String name) {
+        System.out.println("Bean Name is：" + name);
+    }
+
+    @Override
+    public void setBeanClassLoader(ClassLoader classLoader) {
+        System.out.println("ClassLoader：" + classLoader);
     }
 }
