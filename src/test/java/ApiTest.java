@@ -1,6 +1,11 @@
 import cn.hutool.core.io.IoUtil;
 import com.hoodee.springframework.beans.PropertyValue;
 import com.hoodee.springframework.beans.PropertyValues;
+import com.hoodee.springframework.beans.factory.aop.AdvisedSupport;
+import com.hoodee.springframework.beans.factory.aop.TargetSource;
+import com.hoodee.springframework.beans.factory.aop.aspectj.AspectJExpressionPointcut;
+import com.hoodee.springframework.beans.factory.aop.framework.Cglib2AopProxy;
+import com.hoodee.springframework.beans.factory.aop.framework.JdkDynamicAopProxy;
 import com.hoodee.springframework.beans.factory.config.BeanDefinition;
 import com.hoodee.springframework.beans.factory.config.BeanReference;
 import com.hoodee.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -8,6 +13,9 @@ import com.hoodee.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import com.hoodee.springframework.context.support.ClassPathXmlApplicationContext;
 import com.hoodee.springframework.core.io.DefaultResourceLoader;
 import com.hoodee.springframework.core.io.Resource;
+import com.hoodee.springframework.test.bean.AopTestServiceInterceptor;
+import com.hoodee.springframework.test.bean.AopTestService;
+import com.hoodee.springframework.test.bean.IAopTestService;
 import com.hoodee.springframework.test.bean.UserDao;
 import com.hoodee.springframework.test.bean.UserService;
 import com.hoodee.springframework.test.common.MyBeanFactoryPostProcessor;
@@ -19,6 +27,7 @@ import org.openjdk.jol.info.ClassLayout;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 /**
  * @version 1.0
@@ -172,5 +181,39 @@ public class ApiTest {
         applicationContext.publishEvent(new CustomEvent(applicationContext, 1019129009086763L, "成功了！"));
 
         applicationContext.registerShutdownHook();
+    }
+
+    @Test
+    public void test_aop() throws NoSuchMethodException {
+        AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut("execution(* com.hoodee.springframework.test.bean.UserService.*(..))");
+        Class<UserService> clazz = UserService.class;
+        Method method = clazz.getDeclaredMethod("queryUserInfo");
+
+        System.out.println(pointcut.matches(clazz));
+        System.out.println(pointcut.matches(method, clazz));
+
+        // true、true
+    }
+
+    @Test
+    public void test_dynamic() {
+        // 目标对象
+        IAopTestService aopTestService = new AopTestService();
+
+        // 组装代理信息
+        AdvisedSupport advisedSupport = new AdvisedSupport();
+        advisedSupport.setTargetSource(new TargetSource(aopTestService));
+        advisedSupport.setMethodInterceptor(new AopTestServiceInterceptor());
+        advisedSupport.setMethodMatcher(new AspectJExpressionPointcut("execution(* com.hoodee.springframework.test.bean.IAopTestService.*(..))"));
+
+        // 代理对象(JdkDynamicAopProxy)
+        IAopTestService proxy_jdk = (IAopTestService) new JdkDynamicAopProxy(advisedSupport).getProxy();
+        // 测试调用
+        System.out.println("测试结果：" + proxy_jdk.queryUserInfo());
+
+        // 代理对象(Cglib2AopProxy)
+        IAopTestService proxy_cglib = (IAopTestService) new Cglib2AopProxy(advisedSupport).getProxy();
+        // 测试调用
+        System.out.println("测试结果：" + proxy_cglib.register("花花"));
     }
 }
