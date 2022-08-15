@@ -8,5 +8,5 @@ import com.hoodee.springframework.beans.factory.ListableBeanFactory;
  * @author: jianghao
  * @createTime: 2022年07月04日 11:17
  */
-public interface ApplicationContext extends ListableBeanFactory {
+public interface ApplicationContext extends ListableBeanFactory, ApplicationEventPublisher{
 }

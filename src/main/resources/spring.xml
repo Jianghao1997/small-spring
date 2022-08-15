@@ -16,4 +16,11 @@
 
     <bean id="proxyUserDao" class="com.hoodee.springframework.test.bean.ProxyBeanFactory"/>
 
+
+    <bean class="com.hoodee.springframework.test.event.ContextRefreshedEventListener"/>
+
+    <bean class="com.hoodee.springframework.test.event.CustomEventListener"/>
+
+    <bean class="com.hoodee.springframework.test.event.ContextClosedEventListener"/>
+
 </beans>
